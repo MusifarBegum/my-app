@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Comments from './Comments'
 import CommentsList from './CommentsList'
 import { COMMENTSKEY, COMMENTSTHREAD } from '../utils/constants'
 
@@ -9,7 +8,7 @@ const [Message,setMessage] = useState("");
 
     useEffect(()=>{
         getcommentThreads();
-    },[])
+    },[getcommentThreads])
 
     const getcommentThreads = async()=>{
     const data= await fetch(COMMENTSTHREAD+videoId+COMMENTSKEY);
