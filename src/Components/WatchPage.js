@@ -4,6 +4,7 @@ import {  useSearchParams } from 'react-router-dom'
 import {closeMenu} from "../store/configSlice"
 import CommentsSection from './CommentsSection';
 import LiveChat from './LiveChat';
+import WatchPageDescription from './WatchPageDescription';
 
 const WatchPage = () => {
     const  [searchParams] = useSearchParams();
@@ -20,6 +21,7 @@ const WatchPage = () => {
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
         referrerPolicy="strict-origin-when-cross-origin" 
         allowFullScreen="true"></iframe>
+       <WatchPageDescription videoId={searchParams.get("v")}/>
       </div>
     <div className='w-full py-14'>
     <LiveChat/> 

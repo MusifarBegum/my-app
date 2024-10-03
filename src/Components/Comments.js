@@ -10,7 +10,7 @@ const Comments = ({ data }) => {
     const sanitizedComment = DOMPurify.sanitize(comment || '');
 
     return (
-        <div className='m-1 px-10'>
+        <div className='m-1 px-14'>
             <div className='flex'>
                 <img
                     className="h-8"
