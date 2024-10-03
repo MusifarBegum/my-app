@@ -1,25 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { YOUTUBE_API } from '../utils/constants';
+import React from 'react';
 import VideoCard from './VideoCard';
 import { Link } from 'react-router-dom';
+import useVideos from '../hooks/useVideos';
 
 const Videos = () => {
-  const [videos, setVideos] = useState([]);
-
-  useEffect(() => {
-    getVideos();
-  }, []);
-
-  const getVideos = async () => {
-   
-      const response = await fetch(YOUTUBE_API);
-      const json = await response.json();
-      if (json.items) {
-        setVideos(json.items);  // Ensure items exist before updating state
-      } 
-    
-  };
-
+  const  videos = useVideos();
   return (
     <div className='flex flex-wrap px-15'>
    {videos.map((data)=> <Link to={"/watch?v="+ data.id} key={data.id}><VideoCard  info={data} /></Link> )} 

@@ -10,7 +10,6 @@ const Slidebar = () => {
    }
 
   return (
-    // p-4 fixed top-0 left-0 h-full w-64 bg-white shadow-lg overflow-y-auto
 <div className='p-4 h-screen sticky top-0' >
       <div className='border-b pb-4 '>
         <ul>

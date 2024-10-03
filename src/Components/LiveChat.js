@@ -1,30 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import LiveMessage from './LiveMessage';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useDispatch, useSelector } from 'react-redux';
 import { addLiveMessage } from '../store/chatSlice';
-import { generate, randomTextGenerator } from '../utils/helper';
+import useLiveChat from '../hooks/useLiveChat';
 
 const LiveChat = () => {
-    const dispatch = useDispatch();
-    const userChat = useSelector((store) => store.chat.messages);
     const [liveChat, setLiveChat] = useState("");
-
-    useEffect(() => {
-        const i = setInterval(() => {
-            getLiveChatMessages();
-        }, 2000);
-
-        return () => clearInterval(i);
-    }, []);
-
-    const getLiveChatMessages = () => {
-        dispatch(addLiveMessage({
-            name: generate(),
-            Text: randomTextGenerator(10)
-        }));
-        console.log("API");
-    };
-
+    const userChat = useSelector((store) => store.chat.messages);
+    const dispatch = useDispatch();
+    useLiveChat(); //Custom Hook
+   
     return (
         <form className="w-full" onSubmit={(e) => {
             e.preventDefault();

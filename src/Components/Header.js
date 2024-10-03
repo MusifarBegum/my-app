@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSlideBarToggling } from '../store/configSlice';
-import { Link } from 'react-router-dom';
 import { SEARCH_SUGGESTIONS_API } from '../utils/constants';
 import { cache } from '../store/searchSlice';
 
@@ -14,41 +13,35 @@ const [suggestions, setSuggestions] = useState([]);
 const [showSuggestions, setShowSuggestions] = useState(false);
 const searchcache = useSelector(store=>store.search)
 
- useEffect(() => {
-  if (searchQuery) {
-    const timer = setTimeout(()=>
-    {
-      if(searchcache[searchQuery]){
-        setSuggestions(searchcache[searchQuery])
-      }
-      else{
-        searchSuggestion()
-      }
-    }
-       ,200);
+  // Wrap searchSuggestion in useCallback to make it stable and include it as a dependency
+  const searchSuggestion = useCallback(async () => {
+    const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+    const response = await fetch(CORS_PROXY + SEARCH_SUGGESTIONS_API + searchQuery);
+    const json = await response.json();
 
-    return()=>{
-     clearTimeout(timer);
-    }
-  }
+    setSuggestions(json[1]);
 
-
-}, [searchQuery]);
-
-const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-const searchSuggestion = async ()=> {
-  const response = await fetch (CORS_PROXY+SEARCH_SUGGESTIONS_API+searchQuery);
-  const json = await response.json();
-  
-  setSuggestions(json[1])
-  
-     dispatch(cache({
-      // [ip] :["iphone","iphone14"]
-      [searchQuery]:json[1],
+    dispatch(cache({
+      [searchQuery]: json[1],
     }));
-  
- 
-}
+  }, [dispatch, searchQuery]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      const timer = setTimeout(() => {
+        if (searchcache[searchQuery]) {
+          setSuggestions(searchcache[searchQuery]);
+        } else {
+          searchSuggestion();
+        }
+      }, 200);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [searchQuery, searchSuggestion, searchcache]);
+
 
 
 const handleSlideBar =()=>{
